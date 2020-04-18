@@ -1,11 +1,10 @@
 package javax.appinfo;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static javax.appinfo.test.PropertiesAssert.assertPropertyDoesNotExist;
 import static javax.appinfo.test.PropertiesAssert.assertPropertyExists;
@@ -16,18 +15,18 @@ import static javax.appinfo.test.PropertiesAssert.assertPropertyExists;
 public class MainTest {
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         System.setOut(new PrintStream(out));
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         System.setOut(null);
     }
 
     @Test
-    public void mainTest() throws Exception {
+    public void mainTest() {
         String[] args = new String[0];
         Main.main(args);
 
@@ -44,7 +43,7 @@ public class MainTest {
     }
 
     @Test
-    public void mainFilterTest() throws Exception {
+    public void mainFilterTest() {
         String[] args = {"totalLoadedClassCount", "totalCompilationTime"};
         Main.main(args);
 

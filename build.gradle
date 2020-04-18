@@ -3,44 +3,23 @@ apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'jacoco'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-mainClassName = "javax.appinfo.Main"
-
-configurations {
-    providedCompile
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-sourceSets {
-    main.compileClasspath += configurations.providedCompile
-    test.compileClasspath += configurations.providedCompile
-
-    integrationTest {
-        java {
-            compileClasspath += main.output
-            runtimeClasspath += main.output
-        }
-    }
-}
+mainClassName = 'javax.appinfo.Main'
 
 repositories {
     mavenCentral()
 }
-
 dependencies {
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    testImplementation platform('org.junit:junit-bom:5.+')
 
-    testCompile 'junit:junit:4.+'
-    testCompile 'org.assertj:assertj-core:3.+'
-    testCompile 'org.mockito:mockito-core:1.+'
-    testCompile 'javax.servlet:javax.servlet-api:3.1.0'
-
-    integrationTestCompile 'org.springframework.boot:spring-boot-starter-web:1+'
-    integrationTestCompile 'org.springframework.boot:spring-boot-starter-test:1.+'
-    integrationTestCompile 'io.rest-assured:rest-assured:3.+'
+    testImplementation 'org.assertj:assertj-core:3.+'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.+'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
 jar {
@@ -49,58 +28,15 @@ jar {
     }
 }
 
-task integrationTest(type:Test) {
-    description = "Run integration tests (located in src/integrationTest)."
-
-    jacoco {
-        enabled = true
-        append = false
-        destinationFile = file("$buildDir/jacoco/integrationTest.exec")
-        classDumpFile = file("$buildDir/jacoco/integrationTestClassDumpFile")
-    }
-
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
-    reports.html.destination = "$reportsDir/integrationTest"
-    mustRunAfter test
-}
-check.dependsOn integrationTest
-
-task jacocoIntegrationTestReport(type:JacocoReport) {
-    executionData integrationTest
-    sourceSets sourceSets.main
-}
-
-task jacocoMerge(type: JacocoMerge) {
-    executionData test, integrationTest
-    destinationFile = file("$buildDir/jacoco/merged.exec")
-
-    dependsOn jacocoTestReport, jacocoIntegrationTestReport
-}
-
-task mergedReport(type: JacocoReport) {
-    executionData jacocoMerge.destinationFile
-    sourceDirectories = files(sourceSets.main.java.srcDirs)
-    classDirectories = files(sourceSets.main.output.classesDir)
-
-    dependsOn jacocoMerge
-}
-
-test.finalizedBy jacocoTestReport, mergedReport
-integrationTest.finalizedBy jacocoIntegrationTestReport, mergedReport
-
-idea {
-    module {
-        scopes.PROVIDED.plus += [ configurations.integrationTestCompile  ]
-        testSourceDirs += sourceSets.integrationTest.java.srcDirs
-        testSourceDirs += sourceSets.integrationTest.resources.srcDirs
-    }
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 task cleanAll {
     dependsOn clean, cleanIdea, cleanIdeaWorkspace
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.1'
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
 }

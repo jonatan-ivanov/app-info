@@ -1,10 +1,10 @@
 package javax.appinfo;
 
 import org.assertj.core.api.Condition;
-import org.junit.Test;
 
 import java.util.Map;
 import java.util.function.Predicate;
+import org.junit.jupiter.api.Test;
 
 import static javax.appinfo.AppInfoComponent.ALL;
 import static javax.appinfo.AppInfoComponent.CLASS_LOADING;

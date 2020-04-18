@@ -1,7 +1,10 @@
 .gradle/
 build/
 .gradletasknamecache
+
 out/
 *.iml
 *.ipr
 *.iws
+
+.tool-versions

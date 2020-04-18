@@ -51,7 +51,8 @@ public class AppInfo {
     }
 
     public Map<String, String> getProperties(String... keys) {
-        return Collections.unmodifiableMap(collectProperties().entrySet().stream()
+        return Collections.unmodifiableMap(
+            collectProperties().entrySet().stream()
                 .filter(entry -> Arrays.stream(keys).anyMatch(key -> entry.getKey().toLowerCase().contains(key.toLowerCase())))
                 .collect(ENTRY_COLLECTOR)
         );
