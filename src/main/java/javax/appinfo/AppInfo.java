@@ -122,7 +122,6 @@ public class AppInfo {
         props.put("runtime.totalMemory", runtime.totalMemory());
 
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-        props.put("runtime.bootClassPath", runtimeMXBean.getBootClassPath());
         props.put("runtime.classPath", runtimeMXBean.getClassPath());
         props.put("runtime.inputArguments", runtimeMXBean.getInputArguments());
         props.put("runtime.libraryPath", runtimeMXBean.getLibraryPath());
