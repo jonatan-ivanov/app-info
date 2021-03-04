@@ -23,6 +23,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.develotters.appinfo.AppInfoComponent.*;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -32,7 +33,7 @@ public class AppInfo {
     private final Set<AppInfoComponent> components;
 
     public AppInfo() {
-        this(AppInfoComponent.ALL);
+        this(ALL);
     }
 
     public AppInfo(AppInfoComponent... components) {
@@ -73,31 +74,31 @@ public class AppInfo {
     private Map<String, String> collectProperties() {
         Map<Object, Object> props = new TreeMap<>();
 
-        if (components.contains(AppInfoComponent.SYSTEM_PROPERTIES)) {
+        if (components.contains(SYSTEM_PROPERTIES)) {
             addSystemProperties(props);
         }
-        if (components.contains(AppInfoComponent.ENVIRONMENT_VARIABLES)) {
+        if (components.contains(ENVIRONMENT_VARIABLES)) {
             props.putAll(System.getenv());
         }
-        if (components.contains(AppInfoComponent.RUNTIME)) {
+        if (components.contains(RUNTIME)) {
             addRuntimeInfo(props);
         }
-        if (components.contains(AppInfoComponent.CLASS_LOADING)) {
+        if (components.contains(CLASS_LOADING)) {
             addClassLoadingInfo(props);
         }
-        if (components.contains(AppInfoComponent.COMPILATION)) {
+        if (components.contains(COMPILATION)) {
             addCompilationInfo(props);
         }
-        if (components.contains(AppInfoComponent.GARBAGE_COLLECTOR)) {
+        if (components.contains(GARBAGE_COLLECTOR)) {
             addGCInfo(props);
         }
-        if (components.contains(AppInfoComponent.MEMORY)) {
+        if (components.contains(MEMORY)) {
             addMemoryInfo(props);
         }
-        if (components.contains(AppInfoComponent.OPERATING_SYSTEM)) {
+        if (components.contains(OPERATING_SYSTEM)) {
             addOSInfo(props);
         }
-        if (components.contains(AppInfoComponent.THREAD)) {
+        if (components.contains(THREAD)) {
             addThreadInfo(props);
         }
 
