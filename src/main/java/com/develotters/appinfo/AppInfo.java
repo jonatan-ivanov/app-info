@@ -91,13 +91,13 @@ public class AppInfo {
             addCompilationInfo(props);
         }
         if (components.contains(GARBAGE_COLLECTOR)) {
-            addGCInfo(props);
+            addGcInfo(props);
         }
         if (components.contains(MEMORY)) {
             addMemoryInfo(props);
         }
         if (components.contains(OPERATING_SYSTEM)) {
-            addOSInfo(props);
+            addOsInfo(props);
         }
         if (components.contains(THREAD)) {
             addThreadInfo(props);
@@ -149,7 +149,7 @@ public class AppInfo {
         props.put("compilation.totalCompilationTime", compilationMXBean.getTotalCompilationTime());
     }
 
-    private void addGCInfo(Map<Object, Object> props) {
+    private void addGcInfo(Map<Object, Object> props) {
         List<GarbageCollectorMXBean> gcMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
         for (int i = 0; i < gcMXBeans.size(); i++) {
             GarbageCollectorMXBean gcMXBean = gcMXBeans.get(i);
@@ -209,7 +209,7 @@ public class AppInfo {
         }
     }
 
-    private void addOSInfo(Map<Object, Object> props) {
+    private void addOsInfo(Map<Object, Object> props) {
         OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
         props.put("os.arch", osMXBean.getArch());
         props.put("os.availableProcessors", osMXBean.getAvailableProcessors());
