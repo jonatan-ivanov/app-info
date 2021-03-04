@@ -103,7 +103,7 @@ public class AppInfo {
             addThreadInfo(props);
         }
 
-        return props.entrySet().stream().collect(ENTRY_TOSTRING_COLLECTOR);
+        return props.entrySet().stream().collect(ENTRY_TO_STRING_COLLECTOR);
     }
 
     private void addSystemProperties(Map<Object, Object> props) {
@@ -255,7 +255,7 @@ public class AppInfo {
                     TreeMap::new
             );
 
-    private static final Collector<Entry<?, ?>, ?, Map<String, String>> ENTRY_TOSTRING_COLLECTOR =
+    private static final Collector<Entry<?, ?>, ?, Map<String, String>> ENTRY_TO_STRING_COLLECTOR =
             Collectors.toMap(
                     entry -> toString(entry.getKey()),
                     entry -> toString(entry.getValue()),
