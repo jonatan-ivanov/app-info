@@ -10,6 +10,7 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -111,6 +112,7 @@ public class AppInfo {
         props.put("system.nanoTime", System.nanoTime());
         props.put("system.currentTimeMillis", System.currentTimeMillis());
         props.put("system.date", new Date());
+        props.put("system.instant", Instant.now());
     }
 
     private void addRuntimeInfo(Map<Object, Object> props) {
