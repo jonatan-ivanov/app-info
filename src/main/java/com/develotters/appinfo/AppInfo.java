@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static com.develotters.appinfo.AppInfoComponent.*;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -65,10 +67,9 @@ public class AppInfo {
     }
 
     private String prettyPrint(Map<String, String> properties) {
-        StringBuilder sb = new StringBuilder();
-        properties.forEach((key, value) -> sb.append(String.format("%s: %s\n", key, value)));
-
-        return sb.toString();
+        return properties.entrySet().stream()
+            .map(entry -> format("%s: %s", entry.getKey(), entry.getValue()))
+            .collect(joining("\n"));
     }
 
     private Map<String, String> collectProperties() {
@@ -244,7 +245,7 @@ public class AppInfo {
     }
 
     private static final BinaryOperator<String> MERGE_FUNCTION =
-            (key ,value) -> { throw new IllegalStateException(String.format("Duplicate key: %s", key)); };
+            (key ,value) -> { throw new IllegalStateException(format("Duplicate key: %s", key)); };
 
     private static final Collector<Entry<String, String>, ?, Map<String, String>> ENTRY_COLLECTOR =
             Collectors.toMap(
