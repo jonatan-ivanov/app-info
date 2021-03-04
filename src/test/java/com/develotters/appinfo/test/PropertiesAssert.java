@@ -1,9 +1,9 @@
 /*
  * Copyright 2016 Expedia, Inc. All rights reserved. EXPEDIA PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-package javax.appinfo.test;
+package com.develotters.appinfo.test;
 
-import javax.appinfo.AppInfo;
+import com.develotters.appinfo.AppInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

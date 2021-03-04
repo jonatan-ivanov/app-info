@@ -1,4 +1,4 @@
-package javax.appinfo;
+package com.develotters.appinfo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -6,8 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static javax.appinfo.test.PropertiesAssert.assertPropertyDoesNotExist;
-import static javax.appinfo.test.PropertiesAssert.assertPropertyExists;
+import static com.develotters.appinfo.test.PropertiesAssert.assertPropertyDoesNotExist;
+import static com.develotters.appinfo.test.PropertiesAssert.assertPropertyExists;
 
 /**
  * @author Jonatan Ivanov

@@ -1,4 +1,4 @@
-package javax.appinfo;
+package com.develotters.appinfo;
 
 /**
  * @author Jonatan Ivanov

@@ -1,4 +1,4 @@
-package javax.appinfo;
+package com.develotters.appinfo;
 
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.CompilationMXBean;
@@ -21,17 +21,6 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import static javax.appinfo.AppInfoComponent.ALL;
-import static javax.appinfo.AppInfoComponent.CLASS_LOADING;
-import static javax.appinfo.AppInfoComponent.COMPILATION;
-import static javax.appinfo.AppInfoComponent.ENVIRONMENT_VARIABLES;
-import static javax.appinfo.AppInfoComponent.GARBAGE_COLLECTOR;
-import static javax.appinfo.AppInfoComponent.MEMORY;
-import static javax.appinfo.AppInfoComponent.OPERATING_SYSTEM;
-import static javax.appinfo.AppInfoComponent.RUNTIME;
-import static javax.appinfo.AppInfoComponent.SYSTEM_PROPERTIES;
-import static javax.appinfo.AppInfoComponent.THREAD;
-
 /**
  * @author Jonatan Ivanov
  */
@@ -39,7 +28,7 @@ public class AppInfo {
     private final List<AppInfoComponent> components;
 
     public AppInfo() {
-        this(ALL);
+        this(AppInfoComponent.ALL);
     }
 
     public AppInfo(AppInfoComponent... components) {
@@ -76,31 +65,31 @@ public class AppInfo {
     private Map<String, String> collectProperties() {
         Map<Object, Object> props = new TreeMap<>();
 
-        if (components.contains(SYSTEM_PROPERTIES)) {
+        if (components.contains(AppInfoComponent.SYSTEM_PROPERTIES)) {
             addSystemProperties(props);
         }
-        if (components.contains(ENVIRONMENT_VARIABLES)) {
+        if (components.contains(AppInfoComponent.ENVIRONMENT_VARIABLES)) {
             props.putAll(System.getenv());
         }
-        if (components.contains(RUNTIME)) {
+        if (components.contains(AppInfoComponent.RUNTIME)) {
             addRuntimeInfo(props);
         }
-        if (components.contains(CLASS_LOADING)) {
+        if (components.contains(AppInfoComponent.CLASS_LOADING)) {
             addClassLoadingInfo(props);
         }
-        if (components.contains(COMPILATION)) {
+        if (components.contains(AppInfoComponent.COMPILATION)) {
             addCompilationInfo(props);
         }
-        if (components.contains(GARBAGE_COLLECTOR)) {
+        if (components.contains(AppInfoComponent.GARBAGE_COLLECTOR)) {
             addGCInfo(props);
         }
-        if (components.contains(MEMORY)) {
+        if (components.contains(AppInfoComponent.MEMORY)) {
             addMemoryInfo(props);
         }
-        if (components.contains(OPERATING_SYSTEM)) {
+        if (components.contains(AppInfoComponent.OPERATING_SYSTEM)) {
             addOSInfo(props);
         }
-        if (components.contains(THREAD)) {
+        if (components.contains(AppInfoComponent.THREAD)) {
             addThreadInfo(props);
         }
 

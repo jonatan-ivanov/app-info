@@ -1,4 +1,4 @@
-package javax.appinfo;
+package com.develotters.appinfo;
 
 import org.assertj.core.api.Condition;
 
@@ -6,17 +6,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 
-import static javax.appinfo.AppInfoComponent.ALL;
-import static javax.appinfo.AppInfoComponent.CLASS_LOADING;
-import static javax.appinfo.AppInfoComponent.COMPILATION;
-import static javax.appinfo.AppInfoComponent.ENVIRONMENT_VARIABLES;
-import static javax.appinfo.AppInfoComponent.GARBAGE_COLLECTOR;
-import static javax.appinfo.AppInfoComponent.MEMORY;
-import static javax.appinfo.AppInfoComponent.OPERATING_SYSTEM;
-import static javax.appinfo.AppInfoComponent.RUNTIME;
-import static javax.appinfo.AppInfoComponent.SYSTEM_PROPERTIES;
-import static javax.appinfo.AppInfoComponent.THREAD;
-import static javax.appinfo.test.PropertiesAssert.assertPropertyExists;
+import static com.develotters.appinfo.test.PropertiesAssert.assertPropertyExists;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -26,52 +16,52 @@ public class AppInfoTest {
 
     @Test
     public void systemPropertiesTest() {
-        assertPropertyExists("java.version", new AppInfo(SYSTEM_PROPERTIES));
+        assertPropertyExists("java.version", new AppInfo(AppInfoComponent.SYSTEM_PROPERTIES));
     }
 
     @Test
     public void environmentVariablesTest() {
-        assertPropertyExists("PATH", new AppInfo(ENVIRONMENT_VARIABLES));
+        assertPropertyExists("PATH", new AppInfo(AppInfoComponent.ENVIRONMENT_VARIABLES));
     }
 
     @Test
     public void runtimePropertiesTest() {
-        assertPropertyExists("runtime.specVersion", new AppInfo(RUNTIME));
+        assertPropertyExists("runtime.specVersion", new AppInfo(AppInfoComponent.RUNTIME));
     }
 
     @Test
     public void classLoadingPropertiesTest() {
-        assertPropertyExists("classLoading.totalLoadedClassCount", new AppInfo(CLASS_LOADING));
+        assertPropertyExists("classLoading.totalLoadedClassCount", new AppInfo(AppInfoComponent.CLASS_LOADING));
     }
 
     @Test
     public void compilationPropertiesTest() {
-        assertPropertyExists("compilation.totalCompilationTime", new AppInfo(COMPILATION));
+        assertPropertyExists("compilation.totalCompilationTime", new AppInfo(AppInfoComponent.COMPILATION));
     }
 
     @Test
     public void gcPropertiesTest() {
-        assertPropertyExists("gc.0.collectionCount", new AppInfo(GARBAGE_COLLECTOR));
+        assertPropertyExists("gc.0.collectionCount", new AppInfo(AppInfoComponent.GARBAGE_COLLECTOR));
     }
 
     @Test
     public void memoryPropertiesTest() {
-        assertPropertyExists("memory.heapMemoryUsage.used", new AppInfo(MEMORY));
+        assertPropertyExists("memory.heapMemoryUsage.used", new AppInfo(AppInfoComponent.MEMORY));
     }
 
     @Test
     public void osPropertiesTest() {
-        assertPropertyExists("os.name", new AppInfo(OPERATING_SYSTEM));
+        assertPropertyExists("os.name", new AppInfo(AppInfoComponent.OPERATING_SYSTEM));
     }
 
     @Test
     public void threadPropertiesTest() {
-        assertPropertyExists("thread.threadCount", new AppInfo(THREAD));
+        assertPropertyExists("thread.threadCount", new AppInfo(AppInfoComponent.THREAD));
     }
 
     @Test
     public void allPropertiesTest() {
-        AppInfo appInfo = new AppInfo(ALL);
+        AppInfo appInfo = new AppInfo(AppInfoComponent.ALL);
 
         assertPropertyExists("java.version", appInfo);
         assertPropertyExists("PATH", appInfo);
