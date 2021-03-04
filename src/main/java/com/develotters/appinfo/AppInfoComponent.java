@@ -1,5 +1,10 @@
 package com.develotters.appinfo;
 
+import java.util.Arrays;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
+
 /**
  * @author Jonatan Ivanov
  */
@@ -14,5 +19,5 @@ public enum AppInfoComponent {
     OPERATING_SYSTEM,
     THREAD;
 
-    public static final AppInfoComponent[] ALL = AppInfoComponent.values();
+    public static final Set<AppInfoComponent> ALL = Arrays.stream(AppInfoComponent.values()).collect(toSet());
 }

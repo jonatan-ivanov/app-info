@@ -16,23 +16,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * @author Jonatan Ivanov
  */
 public class AppInfo {
-    private final List<AppInfoComponent> components;
+    private final Set<AppInfoComponent> components;
 
     public AppInfo() {
         this(AppInfoComponent.ALL);
     }
 
     public AppInfo(AppInfoComponent... components) {
-        this.components = Arrays.asList(components);
+        this(Arrays.asList(components));
+    }
+
+    public AppInfo(Iterable<AppInfoComponent> components) {
+        this.components = StreamSupport.stream(components.spliterator(), false).collect(toSet());
     }
 
     public Map<String, String> getProperties() {
@@ -57,7 +65,7 @@ public class AppInfo {
 
     private String prettyPrint(Map<String, String> properties) {
         StringBuilder sb = new StringBuilder();
-        properties.entrySet().forEach(e -> sb.append(String.format("%s: %s\n", e.getKey(), e.getValue())));
+        properties.forEach((key, value) -> sb.append(String.format("%s: %s\n", key, value)));
 
         return sb.toString();
     }
