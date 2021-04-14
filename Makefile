@@ -2,8 +2,7 @@ APP_NAME=app-info
 
 pack-build:
 	pack build '$(APP_NAME)' \
-		--env 'BP_GRADLE_BUILD_ARGUMENTS=--no-daemon assemble' \
-		--env 'BP_GRADLE_BUILT_ARTIFACT=build/libs/$(APP_NAME).jar' \
+		--env 'BP_GRADLE_BUILD_ARGUMENTS=clean assemble --no-daemon' \
 		--env 'BP_JVM_VERSION=16'
 
 docker-build:
