@@ -58,7 +58,7 @@ for DOCKER_IMAGE in "${IMAGES[@]}"; do
 
     docker pull "$DOCKER_IMAGE"
     docker build -t app-info .
-    docker run --rm app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/$DOCKER_IMAGE"
+    docker run --rm app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/$(echo "$DOCKER_IMAGE" | tr '/' '_')"
     docker rmi app-info:latest
     rm Dockerfile
 done
