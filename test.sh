@@ -56,6 +56,7 @@ for DOCKER_IMAGE in "${IMAGES[@]}"; do
     export DOCKER_IMAGE
     envsubst < 'Dockerfile.tmpl' > Dockerfile
 
+    docker pull "$DOCKER_IMAGE"
     docker build -t app-info .
     docker run --rm app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/$DOCKER_IMAGE"
     docker rmi app-info:latest
