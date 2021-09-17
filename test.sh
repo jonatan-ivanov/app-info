@@ -7,6 +7,7 @@ IMAGES=(
 )
 
 OUTPUT_DIR='test-out'
+APP_INFO_ARGS='java'
 mkdir -p "$OUTPUT_DIR"
 
 for DOCKER_IMAGE in "${IMAGES[@]}"; do
@@ -16,7 +17,7 @@ for DOCKER_IMAGE in "${IMAGES[@]}"; do
     envsubst < 'Dockerfile.tmpl' > Dockerfile
 
     docker build -t app-info .
-    docker run --rm app-info > "$OUTPUT_DIR/$DOCKER_IMAGE"
+    docker run --rm app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/$DOCKER_IMAGE"
     docker rmi app-info:latest
     rm Dockerfile
 done
