@@ -2,6 +2,8 @@ package com.develotters.appinfo.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetSocketAddress;
 import java.util.function.Supplier;
 
@@ -39,13 +41,30 @@ public class SimpleHttpServer {
     }
 
     private void handleRequest(HttpExchange exchange) throws IOException {
-        byte[] response = responseSupplier.get().getBytes(UTF_8);
+        byte[] response = getResponse().getBytes(UTF_8);
         exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
         exchange.sendResponseHeaders(HTTP_OK, response.length);
 
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(response);
         }
+    }
+
+    private String getResponse() {
+        try {
+            return responseSupplier.get();
+        }
+        catch (Throwable throwable) {
+            return getStackTrace(throwable);
+        }
+    }
+
+    private String getStackTrace(Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+
+        return sw.getBuffer().toString();
     }
 
     private void stop() {
