@@ -1,5 +1,11 @@
 #! /bin/bash
 
+# JMX is not supported on GraalVM right now so you either:
+# - Disable everything that is related to JMX: in Main.java AppInfo appInfo = new AppInfo(SYSTEM_PROPERTIES);
+# - Disable native-image: comment out the last few lines of this file
+
+./gradlew clean assemble
+
 IMAGES=(
     'adoptopenjdk:8-jre-hotspot'
     'adoptopenjdk:8-jre-openj9'
@@ -62,3 +68,7 @@ for DOCKER_IMAGE in "${IMAGES[@]}"; do
     docker rmi app-info:latest
     rm Dockerfile
 done
+
+pack build app-info --env BP_NATIVE_IMAGE=true --path build/libs/app-info.jar
+docker run --rm app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/paketo-buildpacks_native-image"
+docker rmi app-info:latest
