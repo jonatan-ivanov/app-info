@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.BinaryOperator;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -85,31 +86,31 @@ public class AppInfo {
         Map<Object, Object> props = new TreeMap<>();
 
         if (components.contains(SYSTEM_PROPERTIES)) {
-            addSystemProperties(props);
+            safelyRun(() -> addSystemProperties(props));
         }
         if (components.contains(ENVIRONMENT_VARIABLES)) {
-            props.putAll(System.getenv());
+            safelyRun(() -> props.putAll(System.getenv()));
         }
         if (components.contains(RUNTIME)) {
-            addRuntimeInfo(props);
+            safelyRun(() -> addRuntimeInfo(props));
         }
         if (components.contains(CLASS_LOADING)) {
-            addClassLoadingInfo(props);
+            safelyRun(() -> addClassLoadingInfo(props));
         }
         if (components.contains(COMPILATION)) {
-            addCompilationInfo(props);
+            safelyRun(() -> addCompilationInfo(props));
         }
         if (components.contains(GARBAGE_COLLECTOR)) {
-            addGcInfo(props);
+            safelyRun(() -> addGcInfo(props));
         }
         if (components.contains(MEMORY)) {
-            addMemoryInfo(props);
+            safelyRun(() -> addMemoryInfo(props));
         }
         if (components.contains(OPERATING_SYSTEM)) {
-            addOsInfo(props);
+            safelyRun(() -> addOsInfo(props));
         }
         if (components.contains(THREAD)) {
-            addThreadInfo(props);
+            safelyRun(() -> addThreadInfo(props));
         }
 
         return props.entrySet().stream().collect(ENTRY_TO_STRING_COLLECTOR);
@@ -125,133 +126,156 @@ public class AppInfo {
 
     private void addRuntimeInfo(Map<Object, Object> props) {
         Runtime runtime = Runtime.getRuntime();
-        props.put("runtime.availableProcessors", runtime.availableProcessors());
-        props.put("runtime.freeMemory", runtime.freeMemory());
-        props.put("runtime.maxMemory", runtime.maxMemory());
-        props.put("runtime.totalMemory", runtime.totalMemory());
+        props.put("runtime.availableProcessors", safelyGet(runtime::availableProcessors));
+        props.put("runtime.freeMemory", safelyGet(runtime::freeMemory));
+        props.put("runtime.maxMemory", safelyGet(runtime::maxMemory));
+        props.put("runtime.totalMemory", safelyGet(runtime::totalMemory));
 
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-        props.put("runtime.classPath", runtimeMXBean.getClassPath());
-        props.put("runtime.inputArguments", runtimeMXBean.getInputArguments());
-        props.put("runtime.libraryPath", runtimeMXBean.getLibraryPath());
-        props.put("runtime.managementSpecVersion", runtimeMXBean.getManagementSpecVersion());
-        props.put("runtime.name", runtimeMXBean.getName());
-        props.put("runtime.specName", runtimeMXBean.getSpecName());
-        props.put("runtime.specVendor", runtimeMXBean.getSpecVendor());
-        props.put("runtime.specVersion", runtimeMXBean.getSpecVersion());
-        props.put("runtime.startTime", runtimeMXBean.getStartTime());
-        props.put("runtime.uptime", runtimeMXBean.getUptime());
-        props.put("runtime.vmName", runtimeMXBean.getVmName());
-        props.put("runtime.vmVendor", runtimeMXBean.getVmVendor());
-        props.put("runtime.vmVersion", runtimeMXBean.getVmVersion());
+        props.put("runtime.classPath", safelyGet(runtimeMXBean::getClassPath));
+        props.put("runtime.inputArguments", safelyGet(runtimeMXBean::getInputArguments));
+        props.put("runtime.libraryPath", safelyGet(runtimeMXBean::getLibraryPath));
+        props.put("runtime.managementSpecVersion", safelyGet(runtimeMXBean::getManagementSpecVersion));
+        props.put("runtime.name", safelyGet(runtimeMXBean::getName));
+        props.put("runtime.specName", safelyGet(runtimeMXBean::getSpecName));
+        props.put("runtime.specVendor", safelyGet(runtimeMXBean::getSpecVendor));
+        props.put("runtime.specVersion", safelyGet(runtimeMXBean::getSpecVersion));
+        props.put("runtime.startTime", safelyGet(runtimeMXBean::getStartTime));
+        props.put("runtime.uptime", safelyGet(runtimeMXBean::getUptime));
+        props.put("runtime.vmName", safelyGet(runtimeMXBean::getVmName));
+        props.put("runtime.vmVendor", safelyGet(runtimeMXBean::getVmVendor));
+        props.put("runtime.vmVersion", safelyGet(runtimeMXBean::getVmVersion));
     }
 
     private void addClassLoadingInfo(Map<Object, Object> props) {
         ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
-        props.put("classLoading.loadedClassCount", classLoadingMXBean.getLoadedClassCount());
-        props.put("classLoading.totalLoadedClassCount", classLoadingMXBean.getTotalLoadedClassCount());
-        props.put("classLoading.unloadedClassCount", classLoadingMXBean.getUnloadedClassCount());
+        props.put("classLoading.loadedClassCount", safelyGet(classLoadingMXBean::getLoadedClassCount));
+        props.put("classLoading.totalLoadedClassCount", safelyGet(classLoadingMXBean::getTotalLoadedClassCount));
+        props.put("classLoading.unloadedClassCount", safelyGet(classLoadingMXBean::getUnloadedClassCount));
     }
 
     private void addCompilationInfo(Map<Object, Object> props) {
         CompilationMXBean compilationMXBean = ManagementFactory.getCompilationMXBean();
-        props.put("compilation.name", compilationMXBean.getName());
-        props.put("compilation.totalCompilationTime", compilationMXBean.getTotalCompilationTime());
+        props.put("compilation.name", safelyGet(compilationMXBean::getName));
+        props.put("compilation.totalCompilationTime", safelyGet(compilationMXBean::getTotalCompilationTime));
     }
 
     private void addGcInfo(Map<Object, Object> props) {
         List<GarbageCollectorMXBean> gcMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
         for (int i = 0; i < gcMXBeans.size(); i++) {
             GarbageCollectorMXBean gcMXBean = gcMXBeans.get(i);
-            props.put("gc." + i + ".name", gcMXBean.getName());
-            props.put("gc." + i + ".objectName", gcMXBean.getObjectName());
-            props.put("gc." + i + ".collectionCount", gcMXBean.getCollectionCount());
-            props.put("gc." + i + ".collectionTime", gcMXBean.getCollectionTime());
-            props.put("gc." + i + ".memoryPoolNames", Arrays.toString(gcMXBean.getMemoryPoolNames()));
+            props.put("gc." + i + ".name", safelyGet(gcMXBean::getName));
+            props.put("gc." + i + ".objectName", safelyGet(gcMXBean::getObjectName));
+            props.put("gc." + i + ".collectionCount", safelyGet(gcMXBean::getCollectionCount));
+            props.put("gc." + i + ".collectionTime", safelyGet(gcMXBean::getCollectionTime));
+            props.put("gc." + i + ".memoryPoolNames", Arrays.toString(safelyGet(gcMXBean::getMemoryPoolNames)));
         }
     }
 
     private void addMemoryInfo(Map<Object, Object> props) {
         List<MemoryManagerMXBean> memoryManagerMXBeans = ManagementFactory.getMemoryManagerMXBeans();
         for (int i = 0; i < memoryManagerMXBeans.size(); i++) {
-            MemoryManagerMXBean memoryManagerMXBean = memoryManagerMXBeans.get(0);
-            props.put("memoryManager." + i + ".name", memoryManagerMXBean.getName());
-            props.put("memoryManager." + i + ".objectName", memoryManagerMXBean.getObjectName());
-            props.put("memoryManager." + i + ".memoryPoolNames", Arrays.toString(memoryManagerMXBean.getMemoryPoolNames()));
+            MemoryManagerMXBean memoryManagerMXBean = memoryManagerMXBeans.get(i);
+            props.put("memoryManager." + i + ".name", safelyGet(memoryManagerMXBean::getName));
+            props.put("memoryManager." + i + ".objectName", safelyGet(memoryManagerMXBean::getObjectName));
+            props.put("memoryManager." + i + ".memoryPoolNames", Arrays.toString(safelyGet(memoryManagerMXBean::getMemoryPoolNames)));
         }
 
         MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-        props.put("memory.heapMemoryUsage.init", memoryMXBean.getHeapMemoryUsage().getInit());
-        props.put("memory.heapMemoryUsage.used", memoryMXBean.getHeapMemoryUsage().getUsed());
-        props.put("memory.heapMemoryUsage.committed", memoryMXBean.getHeapMemoryUsage().getCommitted());
-        props.put("memory.heapMemoryUsage.max", memoryMXBean.getHeapMemoryUsage().getMax());
-        props.put("memory.nonHeapMemoryUsage.init", memoryMXBean.getNonHeapMemoryUsage().getInit());
-        props.put("memory.nonHeapMemoryUsage.used", memoryMXBean.getNonHeapMemoryUsage().getUsed());
-        props.put("memory.nonHeapMemoryUsage.committed", memoryMXBean.getNonHeapMemoryUsage().getCommitted());
-        props.put("memory.nonHeapMemoryUsage.max", memoryMXBean.getNonHeapMemoryUsage().getMax());
-        props.put("memory.objectPendingFinalizationCount", memoryMXBean.getObjectPendingFinalizationCount());
+        props.put("memory.heapMemoryUsage.init", safelyGet(() -> memoryMXBean.getHeapMemoryUsage().getInit()));
+        props.put("memory.heapMemoryUsage.used", safelyGet(() -> memoryMXBean.getHeapMemoryUsage().getUsed()));
+        props.put("memory.heapMemoryUsage.committed", safelyGet(() -> memoryMXBean.getHeapMemoryUsage().getCommitted()));
+        props.put("memory.heapMemoryUsage.max", safelyGet(() -> memoryMXBean.getHeapMemoryUsage().getMax()));
+        props.put("memory.nonHeapMemoryUsage.init", safelyGet(() -> memoryMXBean.getNonHeapMemoryUsage().getInit()));
+        props.put("memory.nonHeapMemoryUsage.used", safelyGet(() -> memoryMXBean.getNonHeapMemoryUsage().getUsed()));
+        props.put("memory.nonHeapMemoryUsage.committed", safelyGet(() -> memoryMXBean.getNonHeapMemoryUsage().getCommitted()));
+        props.put("memory.nonHeapMemoryUsage.max", safelyGet(() -> memoryMXBean.getNonHeapMemoryUsage().getMax()));
+        props.put("memory.objectPendingFinalizationCount", safelyGet(memoryMXBean::getObjectPendingFinalizationCount));
 
         List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
         for (int i = 0; i < memoryPoolMXBeans.size(); i++) {
             MemoryPoolMXBean memoryPoolMXBean = memoryPoolMXBeans.get(i);
-            props.put("memoryPool." + i + ".name", memoryPoolMXBean.getName());
-            props.put("memoryPool." + i + ".type", memoryPoolMXBean.getType());
-            props.put("memoryPool." + i + ".collectionUsage", memoryPoolMXBean.getCollectionUsage());
-            props.put("memoryPool." + i + ".memoryManagerNames", Arrays.toString(memoryPoolMXBean.getMemoryManagerNames()));
-            props.put("memoryPool." + i + ".peakUsage", memoryPoolMXBean.getPeakUsage());
-            props.put("memoryPool." + i + ".usage", memoryPoolMXBean.getUsage());
+            props.put("memoryPool." + i + ".name", safelyGet(memoryPoolMXBean::getName));
+            props.put("memoryPool." + i + ".type", safelyGet(memoryPoolMXBean::getType));
+            props.put("memoryPool." + i + ".collectionUsage", safelyGet(memoryPoolMXBean::getCollectionUsage));
+            props.put("memoryPool." + i + ".memoryManagerNames", Arrays.toString(safelyGet(memoryPoolMXBean::getMemoryManagerNames)));
+            props.put("memoryPool." + i + ".peakUsage", safelyGet(memoryPoolMXBean::getPeakUsage));
+            props.put("memoryPool." + i + ".usage", safelyGet(memoryPoolMXBean::getUsage));
 
             boolean collectionUsageThresholdSupported = memoryPoolMXBean.isCollectionUsageThresholdSupported();
             props.put("memoryPool." + i + ".collectionUsageThresholdSupported", collectionUsageThresholdSupported);
             if (collectionUsageThresholdSupported) {
-                props.put("memoryPool." + i + ".collectionUsageThreshold", memoryPoolMXBean.getCollectionUsageThreshold());
-                props.put("memoryPool." + i + ".collectionUsageThresholdCount", memoryPoolMXBean.getCollectionUsageThresholdCount());
-                props.put("memoryPool." + i + ".collectionUsageThresholdExceeded", memoryPoolMXBean.isCollectionUsageThresholdExceeded());
+                props.put("memoryPool." + i + ".collectionUsageThreshold", safelyGet(memoryPoolMXBean::getCollectionUsageThreshold));
+                props.put("memoryPool." + i + ".collectionUsageThresholdCount", safelyGet(memoryPoolMXBean::getCollectionUsageThresholdCount));
+                props.put("memoryPool." + i + ".collectionUsageThresholdExceeded", safelyGet(memoryPoolMXBean::isCollectionUsageThresholdExceeded));
             }
 
             boolean usageThresholdSupported = memoryPoolMXBean.isUsageThresholdSupported();
             props.put("memoryPool." + i + ".usageThresholdSupported", usageThresholdSupported);
             if (usageThresholdSupported) {
-                props.put("memoryPool." + i + ".usageThreshold", memoryPoolMXBean.getUsageThreshold());
-                props.put("memoryPool." + i + ".usageThresholdCount", memoryPoolMXBean.getUsageThresholdCount());
-                props.put("memoryPool." + i + ".usageThresholdExceeded", memoryPoolMXBean.isUsageThresholdExceeded());
+                props.put("memoryPool." + i + ".usageThreshold", safelyGet(memoryPoolMXBean::getUsageThreshold));
+                props.put("memoryPool." + i + ".usageThresholdCount", safelyGet(memoryPoolMXBean::getUsageThresholdCount));
+                props.put("memoryPool." + i + ".usageThresholdExceeded", safelyGet(memoryPoolMXBean::isUsageThresholdExceeded));
             }
         }
     }
 
     private void addOsInfo(Map<Object, Object> props) {
         OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
-        props.put("os.arch", osMXBean.getArch());
-        props.put("os.availableProcessors", osMXBean.getAvailableProcessors());
-        props.put("os.name", osMXBean.getName());
-        props.put("os.systemLoadAverage", osMXBean.getSystemLoadAverage());
-        props.put("os.version", osMXBean.getVersion());
+        props.put("os.arch", safelyGet(osMXBean::getArch));
+        props.put("os.availableProcessors", safelyGet(osMXBean::getAvailableProcessors));
+        props.put("os.name", safelyGet(osMXBean::getName));
+        props.put("os.systemLoadAverage", safelyGet(osMXBean::getSystemLoadAverage));
+        props.put("os.version", safelyGet(osMXBean::getVersion));
     }
 
     private void addThreadInfo(Map<Object, Object> props) {
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-        long[] threadIds = threadMXBean.getAllThreadIds();
-        props.put("thread.threadIds", threadIds);
-        props.put("thread.deadlockedThreads", threadMXBean.findDeadlockedThreads());
-        props.put("thread.monitorDeadlockedThreads", threadMXBean.findMonitorDeadlockedThreads());
-        props.put("thread.daemonThreadCount", threadMXBean.getDaemonThreadCount());
-        props.put("thread.peakThreadCount", threadMXBean.getPeakThreadCount());
-        props.put("thread.threadCount", threadMXBean.getThreadCount());
-        props.put("thread.totalStartedThreadCount", threadMXBean.getTotalStartedThreadCount());
 
-        for (long threadId : threadIds) {
-            props.put("thread." + threadId + ".cpuTime", threadMXBean.getThreadCpuTime(threadId));
-            props.put("thread." + threadId + ".userTime", threadMXBean.getThreadUserTime(threadId));
-            props.put("thread." + threadId + ".info", threadMXBean.getThreadInfo(threadId));
+        props.put("thread.threadIds", safelyGet(threadMXBean::getAllThreadIds));
+        props.put("thread.deadlockedThreads", safelyGet(threadMXBean::findDeadlockedThreads));
+        props.put("thread.monitorDeadlockedThreads", safelyGet(threadMXBean::findMonitorDeadlockedThreads));
+        props.put("thread.daemonThreadCount", safelyGet(threadMXBean::getDaemonThreadCount));
+        props.put("thread.peakThreadCount", safelyGet(threadMXBean::getPeakThreadCount));
+        props.put("thread.threadCount", safelyGet(threadMXBean::getThreadCount));
+        props.put("thread.totalStartedThreadCount", safelyGet(threadMXBean::getTotalStartedThreadCount));
+
+        safelyRun(() -> addThreadIdInfo(threadMXBean, props));
+
+        props.put("thread.isCurrentThreadCpuTimeSupported", safelyGet(threadMXBean::isCurrentThreadCpuTimeSupported));
+        props.put("thread.isSynchronizerUsageSupported", safelyGet(threadMXBean::isSynchronizerUsageSupported));
+        props.put("thread.isObjectMonitorUsageSupported", safelyGet(threadMXBean::isObjectMonitorUsageSupported));
+        props.put("thread.isThreadContentionMonitoringSupported", safelyGet(threadMXBean::isThreadContentionMonitoringSupported));
+        props.put("thread.isThreadContentionMonitoringEnabled", safelyGet(threadMXBean::isThreadContentionMonitoringEnabled));
+        props.put("thread.isThreadCpuTimeSupported", safelyGet(threadMXBean::isThreadCpuTimeSupported));
+        props.put("thread.isThreadCpuTimeEnabled", safelyGet(threadMXBean::isThreadCpuTimeEnabled));
+    }
+
+    private void addThreadIdInfo(ThreadMXBean threadMXBean, Map<Object, Object> props) {
+        for (long threadId : threadMXBean.getAllThreadIds()) {
+            props.put("thread." + threadId + ".cpuTime", safelyGet(() -> threadMXBean.getThreadCpuTime(threadId)));
+            props.put("thread." + threadId + ".userTime", safelyGet(() -> threadMXBean.getThreadUserTime(threadId)));
+            props.put("thread." + threadId + ".info", safelyGet(() -> threadMXBean.getThreadInfo(threadId)));
         }
+    }
 
-        props.put("thread.isCurrentThreadCpuTimeSupported", threadMXBean.isCurrentThreadCpuTimeSupported());
-        props.put("thread.isSynchronizerUsageSupported", threadMXBean.isSynchronizerUsageSupported());
-        props.put("thread.isObjectMonitorUsageSupported", threadMXBean.isObjectMonitorUsageSupported());
-        props.put("thread.isThreadContentionMonitoringSupported", threadMXBean.isThreadContentionMonitoringSupported());
-        props.put("thread.isThreadContentionMonitoringEnabled", threadMXBean.isThreadContentionMonitoringEnabled());
-        props.put("thread.isThreadCpuTimeSupported", threadMXBean.isThreadCpuTimeSupported());
-        props.put("thread.isThreadCpuTimeEnabled", threadMXBean.isThreadCpuTimeEnabled());
+    private <T> T safelyGet(Supplier<T> supplier) {
+        try {
+            return supplier.get();
+        }
+        catch (Throwable throwable) {
+            // swallow the error :(
+            return null;
+        }
+    }
+
+    private void safelyRun(Runnable runnable) {
+        try {
+            runnable.run();
+        }
+        catch (Throwable throwable) {
+            // swallow the error :(
+        }
     }
 
     private static final BinaryOperator<String> MERGE_FUNCTION =
