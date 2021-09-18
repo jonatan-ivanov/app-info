@@ -1,12 +1,10 @@
 APP_NAME=app-info
 
 pack-build:
-	pack build '$(APP_NAME)' \
-		--env 'BP_GRADLE_BUILD_ARGUMENTS=assemble --no-daemon' \
-		--env 'BP_JVM_VERSION=16'
+	pack build '$(APP_NAME)' --env BP_JVM_VERSION=17
 
-docker-build:
-	docker build -t '$(APP_NAME)' .
+pack-native-build:
+	pack build '$(APP_NAME)' --env BP_NATIVE_IMAGE=true
 
 docker-run:
-	docker run --rm '$(APP_NAME):latest'
+	docker run --rm --publish 8080:8080 '$(APP_NAME):latest' --server
