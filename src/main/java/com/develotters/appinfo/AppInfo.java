@@ -52,9 +52,13 @@ public class AppInfo {
     }
 
     public Map<String, String> getProperties(String... keys) {
+        return getProperties(Arrays.asList(keys));
+    }
+
+    public Map<String, String> getProperties(List<String> keys) {
         return Collections.unmodifiableMap(
             collectProperties().entrySet().stream()
-                .filter(entry -> Arrays.stream(keys).anyMatch(key -> entry.getKey().toLowerCase().contains(key.toLowerCase())))
+                .filter(entry -> keys.stream().anyMatch(key -> entry.getKey().toLowerCase().contains(key.toLowerCase())))
                 .collect(ENTRY_COLLECTOR)
         );
     }
@@ -64,6 +68,10 @@ public class AppInfo {
     }
 
     public String prettyPrint(String... keys) {
+        return prettyPrint(Arrays.asList(keys));
+    }
+
+    public String prettyPrint(List<String> keys) {
         return prettyPrint(getProperties(keys));
     }
 

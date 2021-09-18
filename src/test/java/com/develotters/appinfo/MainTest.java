@@ -1,6 +1,7 @@
 package com.develotters.appinfo;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ public class MainTest {
     }
 
     @Test
-    public void mainTest() {
+    public void mainTest() throws IOException {
         String[] args = new String[0];
         Main.main(args);
 
@@ -43,7 +44,7 @@ public class MainTest {
     }
 
     @Test
-    public void mainFilterTest() {
+    public void mainFilterTest() throws IOException {
         String[] args = {"totalLoadedClassCount", "totalCompilationTime"};
         Main.main(args);
 
