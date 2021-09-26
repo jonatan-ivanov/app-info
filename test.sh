@@ -16,7 +16,7 @@ IMAGES=(
 
     'eclipse-temurin:8-jre'
     'eclipse-temurin:11-jre'
-    'eclipse-temurin:16-jdk' # TODO 17 (no 16-jre)
+    'eclipse-temurin:17-jdk'
 
     'amazoncorretto:8'
     'amazoncorretto:8-alpine'
@@ -29,8 +29,8 @@ IMAGES=(
     'bellsoft/liberica-openjre-alpine-musl:8'
     'bellsoft/liberica-openjre-debian:11'
     'bellsoft/liberica-openjre-alpine-musl:11'
-    'bellsoft/liberica-openjre-debian:16'      # TODO: 17
-    'bellsoft/liberica-openjre-alpine-musl:16' # TODO: 17
+    'bellsoft/liberica-openjre-debian:17'
+    'bellsoft/liberica-openjre-alpine-musl:17'
 
     'openjdk:8-jre-slim'
     # 8 alpine was discontinued
@@ -46,10 +46,10 @@ IMAGES=(
 
     'azul/zulu-openjdk:8'
     'azul/zulu-openjdk:11'
-    'azul/zulu-openjdk:16' # TODO: 17
+    'azul/zulu-openjdk:17'
     'azul/zulu-openjdk-alpine:8-jre'
     'azul/zulu-openjdk-alpine:11-jre'
-    'azul/zulu-openjdk-alpine:16-jre' # TODO: 17
+    'azul/zulu-openjdk-alpine:17-jre'
 )
 
 OUTPUT_DIR='test-out'
