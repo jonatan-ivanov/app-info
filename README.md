@@ -6,7 +6,7 @@ Example project to extract information from a running JVM.
 
 You can run the app using your favorite IDE or the command line, here are a few examples:
 - `java -jar app-info.jar` (all the information that the app provides)
-- `java -jar build/libs/app-info.jar java os` (specify the details you need)
+- `java -jar app-info.jar java os` (specify the details you need)
 - `java -jar app-info.jar --server` (server mode, call it with `curl localhost:8080`)
 - `java -jar app-info.jar os --server` (filtering works in server mode too)
 
