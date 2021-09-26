@@ -1,9 +1,5 @@
 #! /bin/bash
 
-# JMX is not supported on GraalVM right now so you either:
-# - Disable everything that is related to JMX: in Main.java AppInfo appInfo = new AppInfo(SYSTEM_PROPERTIES);
-# - Disable native-image: comment out the last few lines of this file
-
 ./gradlew clean assemble
 
 IMAGES=(
