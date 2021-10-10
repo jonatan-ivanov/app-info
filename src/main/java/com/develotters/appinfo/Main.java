@@ -15,9 +15,20 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         List<String> arguments = Arrays.stream(args).collect(Collectors.toList());
+
         if (arguments.contains("--server")) {
+            SimpleHttpServer httpServer;
+            int portIndex = arguments.indexOf("--port") + 1;
+            if (portIndex > 0) {
+                httpServer = new SimpleHttpServer(Integer.parseInt(arguments.remove(portIndex)), () -> getInfo(arguments));
+                arguments.remove("--port");
+            }
+            else {
+                httpServer = new SimpleHttpServer(() -> getInfo(arguments));
+            }
+
             arguments.remove("--server");
-            new SimpleHttpServer(() -> getInfo(arguments)).start();
+            httpServer.start();
         }
         else {
             System.out.println(getInfo(arguments));
