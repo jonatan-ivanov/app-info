@@ -3,16 +3,15 @@
 ./gradlew clean assemble
 
 IMAGES=(
-    'adoptopenjdk:8-jre-hotspot'
     'adoptopenjdk:8-jre-openj9'
-    'adoptopenjdk:11-jre-hotspot'
     'adoptopenjdk:11-jre-openj9'
-    'adoptopenjdk:16-jre-hotspot' # TODO: 17
-    'adoptopenjdk:16-jre-openj9'  # TODO: 17
+    'adoptopenjdk:16-jre-openj9'
 
     'eclipse-temurin:8-jre'
     'eclipse-temurin:11-jre'
+    'eclipse-temurin:11-jre-alpine'
     'eclipse-temurin:17-jdk'
+    'eclipse-temurin:17-alpine'
 
     'amazoncorretto:8'
     'amazoncorretto:8-alpine'
