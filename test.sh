@@ -59,11 +59,11 @@ for DOCKER_IMAGE in "${IMAGES[@]}"; do
 
     docker pull "$DOCKER_IMAGE"
     docker build -t app-info .
-    docker run --rm app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/$(echo "$DOCKER_IMAGE" | tr '/' '_')"
+    docker run --rm -it app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/$(echo "$DOCKER_IMAGE" | tr '/' '_')"
     docker rmi app-info:latest
     rm Dockerfile
 done
 
 pack build app-info --env BP_NATIVE_IMAGE=true --path build/libs/app-info.jar
-docker run --rm app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/paketo-buildpacks_native-image"
+docker run --rm -it app-info "$APP_INFO_ARGS" > "$OUTPUT_DIR/paketo-buildpacks_native-image"
 docker rmi app-info:latest
