@@ -31,13 +31,6 @@ test {
     finalizedBy jacocoTestReport
 }
 
-task stage {
-    dependsOn assemble
-    doLast {
-        file('Procfile').text = "web: java -jar ${relativePath(jar.archiveFile)} --server --port \$PORT"
-    }
-}
-
 task cleanAll {
     dependsOn clean, cleanIdea, cleanIdeaWorkspace
 }
