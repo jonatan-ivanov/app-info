@@ -31,7 +31,7 @@ test {
     finalizedBy jacocoTestReport
 }
 
-task cleanAll {
+tasks.register('cleanAll') {
     dependsOn clean, cleanIdea, cleanIdeaWorkspace
 }
 
