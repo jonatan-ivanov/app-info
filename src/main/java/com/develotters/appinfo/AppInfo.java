@@ -190,7 +190,6 @@ public class AppInfo {
         props.put("memory.nonHeapMemoryUsage.used", safelyGet(() -> memoryMXBean.getNonHeapMemoryUsage().getUsed()));
         props.put("memory.nonHeapMemoryUsage.committed", safelyGet(() -> memoryMXBean.getNonHeapMemoryUsage().getCommitted()));
         props.put("memory.nonHeapMemoryUsage.max", safelyGet(() -> memoryMXBean.getNonHeapMemoryUsage().getMax()));
-        props.put("memory.objectPendingFinalizationCount", safelyGet(memoryMXBean::getObjectPendingFinalizationCount));
 
         List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
         for (int i = 0; i < memoryPoolMXBeans.size(); i++) {
@@ -279,7 +278,7 @@ public class AppInfo {
     }
 
     private static final BinaryOperator<String> MERGE_FUNCTION =
-            (key ,value) -> { throw new IllegalStateException(format("Duplicate key: %s", key)); };
+            (key ,ignored) -> { throw new IllegalStateException(format("Duplicate key: %s", key)); };
 
     private static final Collector<Entry<String, String>, ?, Map<String, String>> ENTRY_COLLECTOR =
             Collectors.toMap(
