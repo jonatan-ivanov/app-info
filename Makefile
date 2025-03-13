@@ -1,7 +1,7 @@
 APP_NAME=app-info
 
 pack-build:
-	pack build '$(APP_NAME)' --env BP_JVM_VERSION=17
+	pack build '$(APP_NAME)' --env BP_JVM_VERSION=23
 
 pack-native-build:
 	pack build '$(APP_NAME)' --env BP_NATIVE_IMAGE=true
